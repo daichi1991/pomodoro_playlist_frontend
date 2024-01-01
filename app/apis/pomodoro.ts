@@ -13,6 +13,14 @@ export const getPomodoros = async (spotify_user_id: string) => {
   return response.json();
 };
 
+export const getOnePomodoro = async (id: string) => {
+  const response = await fetch(`${pomodorosUrl}/${id}`, {
+    method: 'GET',
+    headers: requestHeader,
+  });
+  return response.json();
+}
+
 export const createPomodoro = async (pomodoro: Pomodoro) => {
   const response = await fetch(pomodorosUrl, {
     method: 'POST',
