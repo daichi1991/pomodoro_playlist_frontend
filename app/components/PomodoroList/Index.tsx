@@ -1,11 +1,13 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { getPomodoros } from '../../apis/pomodoro';
 import { AuthUserContext } from '../../context/authUserContext';
 import { Pomodoro } from '../../types';
 
 export const PomodoroList = () => {
+  const router = useRouter();
   const { userId } = useContext(AuthUserContext);
   const [pomodoros, setPomodoros] = useState<Pomodoro[]>([]);
 
@@ -33,6 +35,11 @@ export const PomodoroList = () => {
     });
     const data = await response.json();
     return data.name;
+  };
+
+  const handleGoToPlayPomodoroPage = (pomodoro_id: string) => {
+    if (!userId) return;
+    router.push(`/play_pomodoro/${pomodoro_id}`);
   };
 
   useEffect(() => {
@@ -76,8 +83,9 @@ export const PomodoroList = () => {
             {pomodoros.map((pomodoro) => (
               <>
                 <tr
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
                   key={pomodoro.id}
+                  onClick={() => handleGoToPlayPomodoroPage(pomodoro.id)}
                 >
                   <th
                     scope="row"
