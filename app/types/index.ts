@@ -3,11 +3,11 @@ export interface Pomodoro {
   spotify_userId: string;
   name: string;
   work_time_playlist_id: string;
-  work_time_playlist_name: string | null;
-  work_time_playlist_image: string | null;
+  work_time_playlist_name?: string
+  work_time_playlist_image?: string
   break_time_playlist_id: string;
-  break_time_playlist_name: string | null;
-  break_time_playlist_image: string | null;
+  break_time_playlist_name?: string
+  break_time_playlist_image?: string
   work_time: number;
   break_time: number;
   term_count: number;
