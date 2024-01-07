@@ -2,49 +2,72 @@
 
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import { getPomodoros } from '../../apis/pomodoro';
+import { deletePomodoro, getPomodoros } from '../../apis/pomodoro';
+import { getPlaylists } from '../../apis/spotify';
 import { AuthUserContext } from '../../context/authUserContext';
-import { Pomodoro } from '../../types';
+import { Pomodoro, SpotifyPlaylistItems } from '../../types';
+import { Modal } from '../Modal/Index';
 
 export const PomodoroList = () => {
   const router = useRouter();
   const { userId } = useContext(AuthUserContext);
-  const [pomodoros, setPomodoros] = useState<Pomodoro[]>([]);
+  const [pomodorosState, setPomodorosState] = useState<Pomodoro[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteTargetPomodoro, setDeleteTargetPomodoro] = useState<Pomodoro | null>(null);
+  const [deletePomodoroCount, setDeletePomodoroCount] = useState(0);
 
   const handleGetPomodoros = async () => {
     if (!userId) return;
-    getPomodoros(userId).then((response) => {
-      response.pomodoros.forEach(async (pomodoro: Pomodoro) => {
-        pomodoro.work_time_playlist_name = await getPomodoroPlaylistName(
-          pomodoro.work_time_playlist_id
-        );
-        pomodoro.break_time_playlist_name = await getPomodoroPlaylistName(
-          pomodoro.break_time_playlist_id
-        );
-      });
-      setPomodoros(response.pomodoros);
+    const response = await getPomodoros(userId);
+    const pomodoros = response.pomodoros;
+    if (pomodoros.length === 0) {
+      setPomodorosState([]);
+      return;
+    }
+    console.log(pomodoros);
+    const spotifyPlaylists = await getPlaylists();
+    pomodoros.forEach(async (pomodoro: Pomodoro) => {
+      setPomodoroName(pomodoro, spotifyPlaylists);
     });
+    setPomodorosState(pomodoros);
   };
 
-  const getPomodoroPlaylistName = async (playlistId: string) => {
-    if (!userId) return;
-    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    });
-    const data = await response.json();
-    return data.name;
-  };
+  const setPomodoroName = (pomodoro: Pomodoro, spotifyPlaylistItems: SpotifyPlaylistItems[]) => {
+    const workTimePlaylist = spotifyPlaylistItems.find((playlist) => playlist.id === pomodoro.work_time_playlist_id);
+    const breakTimePlaylist = spotifyPlaylistItems.find((playlist) => playlist.id === pomodoro.break_time_playlist_id);
+    pomodoro.work_time_playlist_name = workTimePlaylist?.name;
+    pomodoro.break_time_playlist_name = breakTimePlaylist?.name;
+  }
 
   const handleGoToPlayPomodoroPage = (pomodoro_id: string) => {
     if (!userId) return;
+    if (!pomodoro_id) return;
     router.push(`/play_pomodoro/${pomodoro_id}`);
   };
 
+  const handleDeleteModalOpen = (pomodoro: Pomodoro) => {
+    if (!pomodoro) return;
+    setDeleteTargetPomodoro(pomodoro);
+    setIsModalOpen(true);
+  };
+
+  const handleDeletePomodoro = () => {
+    if (!deleteTargetPomodoro?.id) return;
+    deletePomodoro(deleteTargetPomodoro.id);
+    setIsModalOpen(false);
+    setDeleteTargetPomodoro(null);
+    setDeletePomodoroCount(deletePomodoroCount + 1);
+  }
+
+  const handleDeleteModalClose = () => {
+    setIsModalOpen(false);
+    setDeleteTargetPomodoro(null);
+  }
+
+
   useEffect(() => {
     handleGetPomodoros();
-  }, [userId]);
+  }, [userId, deletePomodoroCount]);
 
   return (
     <>
@@ -75,30 +98,34 @@ export const PomodoroList = () => {
                 セット終了後の休憩時間
               </th>
               <th scope="col" className="px-6 py-3">
+                セットを繰り返す回数
+              </th>
+              <th scope="col" className="px-6 py-3">
                 アクション
               </th>
             </tr>
           </thead>
           <tbody>
-            {pomodoros.map((pomodoro) => (
+            {pomodorosState.map((pomodoro) => (
               <>
                 <tr
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
                   key={pomodoro.id}
-                  onClick={() => handleGoToPlayPomodoroPage(pomodoro.id)}
                 >
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}
                   >
                     {pomodoro.name}
                   </th>
-                  <td className="px-6 py-4">{pomodoro.work_time_playlist_name}</td>
-                  <td className="px-6 py-4">{pomodoro.break_time_playlist_name}</td>
-                  <td className="px-6 py-4">{pomodoro.work_time}分</td>
-                  <td className="px-6 py-4">{pomodoro.break_time}分</td>
-                  <td className="px-6 py-4">{pomodoro.term_count}セット</td>
-                  <td className="px-6 py-4">{pomodoro.long_break_time}分</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time_playlist_name}</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time_playlist_name}</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time / 60 / 1000}分</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time / 60 / 1000}分</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_count}セット</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.long_break_time / 60 / 1000}分</td>
+                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_repeat_count}回</td>
                   <td className="flex items-center px-6 py-4">
                     <a
                       href="#"
@@ -106,12 +133,12 @@ export const PomodoroList = () => {
                     >
                       編集
                     </a>
-                    <a
-                      href="#"
+                    <button
+                      onClick={() => handleDeleteModalOpen(pomodoro)}
                       className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
                     >
                       削除
-                    </a>
+                    </button>
                   </td>
                 </tr>
               </>
@@ -119,6 +146,17 @@ export const PomodoroList = () => {
           </tbody>
         </table>
       </div>
+      <Modal
+        open={isModalOpen}
+        title="本当に削除しますか？"
+        content="削除すると元に戻せません。"
+        acceptButtonText="削除する"
+        idDeclineButton={true}
+        declineButtonText="キャンセル"
+        acceptButtonOnClick={handleDeletePomodoro}
+        declineButtonOnClick={handleDeleteModalClose}
+        closeModalOnClick={handleDeleteModalClose}
+      />
     </>
   );
 };

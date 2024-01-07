@@ -29,3 +29,11 @@ export const createPomodoro = async (pomodoro: Pomodoro) => {
   });
   return response.json();
 };
+
+export const deletePomodoro = async (id: string) => {
+  const response = await fetch(`${pomodorosUrl}/${id}`, {
+    method: 'DELETE',
+    headers: requestHeader,
+  });
+  return response.json();
+}

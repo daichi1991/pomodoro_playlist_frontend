@@ -9,6 +9,7 @@ export const Header: React.FC = () => {
   const { isAuthenticated, setIsAuthenticated, userImage, setUserImage, getUserProfile } =
     useContext(AuthUserContext);
   const router = useRouter();
+  const [isLogin, setIsLogin] = useState(false);
 
   const handleMenuOpen = () => {
     setMenuOpen(!menuOpen);
@@ -98,6 +99,13 @@ export const Header: React.FC = () => {
     getTokens();
     getUserProfile();
   }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) {
+      setIsLogin(true);
+    }
+  }, [isLogin]);
+
 
   return (
     <>
@@ -272,7 +280,7 @@ export const Header: React.FC = () => {
                     aria-labelledby="user-menu-button"
                   >
                     {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
-                    {!isAuthenticated ? (
+                    {!isLogin ? (
                       <div
                         onClick={handleSignin}
                         className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"

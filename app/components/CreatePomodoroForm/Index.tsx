@@ -1,11 +1,13 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 import { createPomodoro } from '../../apis/pomodoro';
 import { AuthUserContext } from '../../context/authUserContext';
 import { MusicContext } from '../../context/musicContext';
 
 export const CreatePomodoroForm: React.FC = () => {
+  const router = useRouter();
   const { playlists } = useContext(MusicContext);
   const { userId } = useContext(AuthUserContext);
   const [worktimePlaylist, setWorktimePlaylist] = useState({ id: '', name: '' });
@@ -15,6 +17,7 @@ export const CreatePomodoroForm: React.FC = () => {
   const [breaktimeLength, setBreaktimeLength] = useState(0);
   const [termCount, setTermCount] = useState(0);
   const [longBreaktimeLength, setLongBreaktimeLength] = useState(0);
+  const [termRepeatCount, setTermRepeatCount] = useState(0);
   const [isErrorPomodoroName, setIsErrorPomodoroName] = useState(false);
   const [isErrorWorktimePlaylist, setIsErrorWorktimePlaylist] = useState(false);
   const [isErrorBreaktimePlaylist, setIsErrorBreaktimePlaylist] = useState(false);
@@ -22,6 +25,7 @@ export const CreatePomodoroForm: React.FC = () => {
   const [isErrorBreaktimeLength, setIsErrorBreaktimeLength] = useState(false);
   const [isErrorTermCount, setIsErrorTermCount] = useState(false);
   const [isErrorLongBreaktimeLength, setIsErrorLongBreaktimeLength] = useState(false);
+  const [isErrorTermRepeatCount, setIsErrorTermRepeatCount] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const handleSetWorktimePlaylist = (playlistId: string, playlistName: string) => {
@@ -76,6 +80,12 @@ export const CreatePomodoroForm: React.FC = () => {
     } else {
       setIsErrorLongBreaktimeLength(false);
     }
+    if (termRepeatCount === 0) {
+      setIsErrorTermRepeatCount(true);
+      isErrorCount += 1;
+    } else {
+      setIsErrorTermRepeatCount(false);
+    }
     if (isErrorCount > 0) {
       setIsError(true);
     } else {
@@ -97,9 +107,11 @@ export const CreatePomodoroForm: React.FC = () => {
       break_time: breaktimeLength,
       term_count: termCount,
       long_break_time: longBreaktimeLength,
+      term_repeat_count: termRepeatCount,
     };
     createPomodoro(pomodoro).then((res) => {
       console.log(res);
+      router.push(`/play_pomodoro/${res.pomodoro.id}`);
     });
   };
 
@@ -178,8 +190,8 @@ export const CreatePomodoroForm: React.FC = () => {
                 name="worktime-length"
                 id="worktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={worktimeLength}
-                onChange={(e) => setWorktimeLength(Number(e.target.value))}
+                value={worktimeLength / 60 / 1000}
+                onChange={(e) => setWorktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
             </div>
@@ -199,8 +211,8 @@ export const CreatePomodoroForm: React.FC = () => {
                 name="breaktime-length"
                 id="breaktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={breaktimeLength}
-                onChange={(e) => setBreaktimeLength(Number(e.target.value))}
+                value={breaktimeLength / 60 / 1000}
+                onChange={(e) => setBreaktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
             </div>
@@ -229,7 +241,7 @@ export const CreatePomodoroForm: React.FC = () => {
         </div>
         <div id="term-breaktime-length-form">
           <label htmlFor="term-breaktime-length" className="block text-sm font-medium leading-6">
-            セット終了時の休憩時間
+            全セット終了時の休憩時間
           </label>
           <div className="mt-2">
             {isErrorLongBreaktimeLength && (
@@ -241,10 +253,31 @@ export const CreatePomodoroForm: React.FC = () => {
                 name="term-breaktime-length"
                 id="term-breaktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={longBreaktimeLength}
-                onChange={(e) => setLongBreaktimeLength(Number(e.target.value))}
+                value={longBreaktimeLength / 60 / 1000}
+                onChange={(e) => setLongBreaktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
+            </div>
+          </div>
+        </div>
+        <div id="term_repeat_count-form">
+          <label htmlFor="term_repeat_count" className="block text-sm font-medium leading-6">
+            セットを繰り返す回数
+          </label>
+          <div className="mt-2">
+            {isErrorTermRepeatCount && (
+              <div className="text-red-500 text-sm">セットを繰り返す回数を入力してください</div>
+            )}
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+              <input
+                type="number"
+                name="term_repeat_count"
+                id="term_repeat_count"
+                className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                value={termRepeatCount}
+                onChange={(e) => setTermRepeatCount(Number(e.target.value))}
+              />
+              <span className="inline-flex items-center px-3 text-gray-500 text-sm">回</span>
             </div>
           </div>
         </div>
