@@ -18,6 +18,7 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
   const [pomodoroElementsState, setPomodoroElementsState] = useState<{ mode: string, playlist_id: string, time: number }[]>([]);
   const [currentPomodoroPosition, setCurrentPomodoroPosition] = useState(0);
   const [currentTerm, setCurrentTerm] = useState(0);
+  const [currentTermRepeat, setCurrentTermRepeat] = useState(0);
   const [playPomodoroState, setPlayPomodoroState] = useState<'play' | 'pause' | 'stop'>('stop');
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const intervalIds: NodeJS.Timeout[] = [];
@@ -32,11 +33,14 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
     clearTimeout(timeoutId!);
     await countdownTimer(3000);
     await sleep(3000);
-    for (let i = 0; i < pomodoroElementsState.length; i++) {
-      setCurrentPomodoroPosition(i);
-      await countdownTimer(pomodoroElementsState[i].time * 60 * 1000);
-      await startPlaylist(pomodoroElementsState[i].playlist_id);
-      await sleep(pomodoroElementsState[i].time * 60 * 1000);
+    for (let i = 0; i < pomodoro.term_repeat_count; i++) {
+      setCurrentTermRepeat(currentTermRepeat + 1);
+      for (let j = 0; j < pomodoroElementsState.length; j++) {
+        setCurrentPomodoroPosition(j);
+        await countdownTimer(pomodoroElementsState[j].time);
+        await startPlaylist(pomodoroElementsState[j].playlist_id);
+        await sleep(pomodoroElementsState[j].time);
+      }
     }
     await pausePlayback();
     setPlayPomodoroState('stop');
@@ -56,18 +60,22 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
     clearAllIntervals();
     setPlayPomodoroState('play');
     const currentPosition = currentPomodoroPosition;
-    console.log(pomodoroElementsState);
-    console.log(currentPosition);
-    for (let i = currentPosition; i < pomodoroElementsState.length; i++) {
-      setCurrentPomodoroPosition(i);
-      if (i === currentPosition) {
-        await countdownTimer(countdownTime);
-        await resumePlayback();
-        await sleep(countdownTime);
-      } else {
-        await countdownTimer(pomodoroElementsState[i].time * 60 * 1000);
-        await startPlaylist(pomodoroElementsState[i].playlist_id);
-        await sleep(pomodoroElementsState[i].time * 60 * 1000);
+    const currentTermRepeatPosition = currentTermRepeat;
+    for (let i = currentTermRepeatPosition - 1; i < pomodoro.term_repeat_count; i++) {
+      if (i !== currentTermRepeat - 1) {
+        setCurrentTermRepeat(currentTermRepeat + 1);
+      }
+      for (let j = currentPosition; j < pomodoroElementsState.length; j++) {
+        setCurrentPomodoroPosition(j);
+        if (j === currentPosition) {
+          await countdownTimer(countdownTime);
+          await resumePlayback();
+          await sleep(countdownTime);
+        } else {
+          await countdownTimer(pomodoroElementsState[j].time);
+          await startPlaylist(pomodoroElementsState[j].playlist_id);
+          await sleep(pomodoroElementsState[j].time);
+        }
       }
     }
     await pausePlayback();
@@ -211,7 +219,7 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
           </div>
           <div>
             <div className="my-4 text-4xl">{pomodoro.work_time_playlist_name}</div>
-            <div className="my-4 text-2xl">集中時間： {pomodoro.work_time} 分</div>
+            <div className="my-4 text-2xl">集中時間： {pomodoro.work_time / 60 / 1000} 分</div>
           </div>
         </div>
         <div className="mx-8 bg-gray-500 w-px h-auto"></div>
@@ -229,7 +237,7 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
           </div>
           <div>
             <div className="my-4 text-4xl">{pomodoro.break_time_playlist_name}</div>
-            <div className="my-4 text-2xl">休憩時間： {pomodoro.break_time} 分</div>
+            <div className="my-4 text-2xl">休憩時間： {pomodoro.break_time / 60 / 1000} 分</div>
           </div>
         </div>
       </div>
@@ -239,7 +247,7 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
       </div>
       <hr className="h-px w-10/12 bg-gray-500" />
       <div className="my-4 text-2xl">
-        全セット終了後の休憩時間： {pomodoro.long_break_time} 分
+        全セット終了後の休憩時間： {pomodoro.long_break_time / 60 / 1000} 分
       </div>
       {
         player && (
@@ -276,21 +284,26 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
         )
       }
 
-    {countdownTime > 0 && (
+      {countdownTime > 0 && (
+        <div className="my-4 text-2xl">
+          {countdownTime / 1000}
+        </div>
+      )}
+      {pomodoroElementsState.length > 0 && (
+        <div className="my-4 text-2xl">
+          {pomodoroElementsState[currentPomodoroPosition].mode === 'work' ? '集中' : pomodoroElementsState[currentPomodoroPosition].mode === 'break' ? '休憩' : '全セット終了後の休憩'}
+        </div>
+      )}
+      {currentTerm > 0 && (
+        <div className="my-4 text-2xl">
+          {currentTerm} / {pomodoro.term_count} 回目
+        </div>
+      )}
+      {currentTermRepeat > 0 && (
       <div className="my-4 text-2xl">
-        {countdownTime / 1000}
-      </div>
-    )}
-    {pomodoroElementsState.length > 0 && (
-      <div className="my-4 text-2xl">
-        {pomodoroElementsState[currentPomodoroPosition].mode === 'work' ? '集中' : pomodoroElementsState[currentPomodoroPosition].mode === 'break' ? '休憩' : '全セット終了後の休憩'}
-      </div>
-    )}
-    {currentTerm > 0 && (
-      <div className="my-4 text-2xl">
-        {currentTerm} / {pomodoro.term_count} セット
-      </div>
-    )}
+          {currentTermRepeat} / {pomodoro.term_repeat_count} セット
+        </div>
+      )}
     </>
   );
 };
