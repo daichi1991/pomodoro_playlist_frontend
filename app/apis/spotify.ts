@@ -1,4 +1,6 @@
 export const startPlaylist = async (playlist_id: string) => {
+  console.log(playlist_id);
+  if (!playlist_id) return;
   const access_token = localStorage.getItem('access_token');
   if (!access_token) return;
   console.log('startPlaylist');
