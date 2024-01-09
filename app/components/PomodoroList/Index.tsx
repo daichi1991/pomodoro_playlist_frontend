@@ -45,6 +45,12 @@ export const PomodoroList = () => {
     router.push(`/play_pomodoro/${pomodoro_id}`);
   };
 
+  const handelGoToUpdatePomodoroPage = (pomodoro_id: string) => {
+    if (!userId) return;
+    if (!pomodoro_id) return;
+    router.push(`/edit_pomodoro/${pomodoro_id}`);
+  };
+
   const handleDeleteModalOpen = (pomodoro: Pomodoro) => {
     if (!pomodoro) return;
     setDeleteTargetPomodoro(pomodoro);
@@ -127,12 +133,12 @@ export const PomodoroList = () => {
                   <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.long_break_time / 60 / 1000}分</td>
                   <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_repeat_count}回</td>
                   <td className="flex items-center px-6 py-4">
-                    <a
-                      href="#"
+                    <button
+                      onClick={() => handelGoToUpdatePomodoroPage(pomodoro.id!)}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       編集
-                    </a>
+                    </button>
                     <button
                       onClick={() => handleDeleteModalOpen(pomodoro)}
                       className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"

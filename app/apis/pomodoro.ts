@@ -30,6 +30,15 @@ export const createPomodoro = async (pomodoro: Pomodoro) => {
   return response.json();
 };
 
+export const updatePomodoro = async (pomodoro: Pomodoro) => {
+  const response = await fetch(`${pomodorosUrl}/${pomodoro.id}`, {
+    method: 'PUT',
+    headers: requestHeader,
+    body: JSON.stringify(pomodoro),
+  });
+  return response.json();
+}
+
 export const deletePomodoro = async (id: string) => {
   const response = await fetch(`${pomodorosUrl}/${id}`, {
     method: 'DELETE',

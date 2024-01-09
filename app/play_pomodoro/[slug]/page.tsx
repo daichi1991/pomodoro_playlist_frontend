@@ -21,6 +21,7 @@ export default function PlayPomodoro() {
     break_time: 0,
     term_count: 0,
     long_break_time: 0,
+    term_repeat_count: 0,
   });
 
   const handleGetPomodoro = async () => {
