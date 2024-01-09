@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { createPomodoro, updatePomodoro } from '../../apis/pomodoro';
 import { AuthUserContext } from '../../context/authUserContext';
 import { MusicContext } from '../../context/musicContext';
+import { SelectPlaylistModal } from '../PlaylistModal/Index';
 
 interface Props{
   mode: string;
@@ -33,6 +34,24 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
   const [isErrorLongBreaktimeLength, setIsErrorLongBreaktimeLength] = useState(false);
   const [isErrorTermRepeatCount, setIsErrorTermRepeatCount] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isWorktimePlaylistModalOpen, setIsWorktimePlaylistModalOpen] = useState(false);
+  const [isBreaktimePlaylistModalOpen, setIsBreaktimePlaylistModalOpen] = useState(false);
+
+  const handleWorktimePlaylistModalOpen = () => {
+    setIsWorktimePlaylistModalOpen(true);
+  }
+
+  const handleWorktimePlaylistModalClose = () => {
+    setIsWorktimePlaylistModalOpen(false);
+  }
+
+  const handleBreaktimePlaylistModalOpen = () => {
+    setIsBreaktimePlaylistModalOpen(true);
+  }
+
+  const handleBreaktimePlaylistModalClose = () => {
+    setIsBreaktimePlaylistModalOpen(false);
+  }
 
   const handleSetWorktimePlaylist = (playlistId: string, playlistName: string) => {
     setWorktimePlaylist({ id: playlistId, name: playlistName });
@@ -191,6 +210,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             <button
               type="button"
               className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              onClick={() => handleWorktimePlaylistModalOpen()}
             >
               選択
             </button>
@@ -208,6 +228,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             <button
               type="button"
               className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              onClick={() => handleBreaktimePlaylistModalOpen()}
             >
               選択
             </button>
@@ -338,40 +359,22 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
           )}
         </div>
       </div>
-      <div id="select-worktime-playlist">
-        <div id="select-worktime-playlist-header">
-          <h2>作業中に再生するプレイリストを選択</h2>
-        </div>
-        <div id="select-worktime-playlist-body">
-          <ul>
-            {playlists?.map((playlist: any) => (
-              <li
-                key={playlist.id}
-                onClick={() => handleSetWorktimePlaylist(playlist.id, playlist.name)}
-              >
-                {playlist.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div id="select-breaktime-playlist">
-        <div id="select-worktime-playlist-header">
-          <h2>休憩中に再生するプレイリストを選択</h2>
-        </div>
-        <div id="select-worktime-playlist-body">
-          <ul>
-            {playlists?.map((playlist: any) => (
-              <li
-                key={playlist.id}
-                onClick={() => handleSetBreaktimePlaylist(playlist.id, playlist.name)}
-              >
-                {playlist.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <SelectPlaylistModal
+        open={isWorktimePlaylistModalOpen}
+        title={'作業中に再生するプレイリストを選択'}
+        declineButtonText={'キャンセル'}
+        declineButtonOnClick={() => handleWorktimePlaylistModalClose()}
+        closeModalOnClick={() => handleWorktimePlaylistModalClose()}
+        selectPlaylistOnClick={(playlistId: string, playlistName: string) => handleSetWorktimePlaylist(playlistId, playlistName)}
+      />
+      <SelectPlaylistModal
+        open={isBreaktimePlaylistModalOpen}
+        title={'休憩中に再生するプレイリストを選択'}
+        declineButtonText={'キャンセル'}
+        declineButtonOnClick={() => handleBreaktimePlaylistModalClose()}
+        closeModalOnClick={() => handleBreaktimePlaylistModalClose()}
+        selectPlaylistOnClick={(playlistId: string, playlistName: string) => handleSetBreaktimePlaylist(playlistId, playlistName)}
+      />
     </>
   );
 };

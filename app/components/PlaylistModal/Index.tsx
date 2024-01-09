@@ -1,18 +1,25 @@
 'use client';
 
+import { MusicContext } from "@/app/context/musicContext";
+import { useContext } from "react";
+
 interface Props {
   open: boolean;
   title: string;
-  content: string;
-  acceptButtonText: string;
-  idDeclineButton: boolean;
-  declineButtonText?: string;
-  acceptButtonOnClick: () => void;
-  declineButtonOnClick?: () => void;
+  declineButtonText: string;
+  declineButtonOnClick: () => void;
   closeModalOnClick: () => void;
+  selectPlaylistOnClick: (playlistId: string, playlistName: string) => void;
 }
 
-export const Modal: React.FC<Props> = (props: Props) => {
+export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
+  const { playlists } = useContext(MusicContext);
+  
+  const handleSelectPlaylistOnClick = (playlistId: string, playlistName: string) => {
+    props.selectPlaylistOnClick(playlistId, playlistName);
+    props.closeModalOnClick();
+  }
+
   return (
     <>
     {props.open && (
@@ -37,29 +44,29 @@ export const Modal: React.FC<Props> = (props: Props) => {
               </button>
             </div>
             <div className="p-4 md:p-5 space-y-4">
-                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                  {props.content}
-                </p>
+              <ul>
+                {playlists?.map((playlist: any) => (
+                  <li
+                    key={playlist.id}
+                    onClick={
+                      () => handleSelectPlaylistOnClick(playlist.id, playlist.name)
+                    }
+                    className="text-base leading-relaxed text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  >
+                    {playlist.name}
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
               <button
                 data-modal-hide="default-modal"
                 type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={() => props.acceptButtonOnClick()}
-              > 
-                {props.acceptButtonText}
+                className="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                onClick={() => props.declineButtonOnClick!()}
+              >
+                {props.declineButtonText}
               </button>
-                {props.idDeclineButton && (
-                  <button
-                    data-modal-hide="default-modal"
-                    type="button"
-                    className="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                    onClick={() => props.declineButtonOnClick!()}
-                  >
-                    {props.declineButtonText}
-                  </button>
-                )}
               </div>
             </div>
         </div>

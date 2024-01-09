@@ -24,7 +24,6 @@ export const PomodoroList = () => {
       setPomodorosState([]);
       return;
     }
-    console.log(pomodoros);
     const spotifyPlaylists = await getPlaylists();
     pomodoros.forEach(async (pomodoro: Pomodoro) => {
       setPomodoroName(pomodoro, spotifyPlaylists);
