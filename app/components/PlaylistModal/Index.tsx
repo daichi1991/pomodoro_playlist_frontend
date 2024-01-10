@@ -25,7 +25,7 @@ export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
     {props.open && (
     <div id="overlay" className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
       <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center">
-        <div className="relative p-4 w-full max-w-2xl max-h-full">
+        <div className="relative p-4 w-full max-w-2xl max-h-full h-11/12">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -43,7 +43,7 @@ export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
                   <span className="sr-only">Close modal</span>
               </button>
             </div>
-            <div className="p-4 md:p-5 space-y-4">
+            <div className="p-4 md:p-5 space-y-4 overflow-y-auto">
               <ul>
                 {playlists?.map((playlist: any) => (
                   <li

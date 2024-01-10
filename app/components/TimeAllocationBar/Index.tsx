@@ -119,11 +119,10 @@ export const TimeAllocationBar: React.FC<Props> = (props: Props) => {
       return { mode: order.mode, time: order.time, rate: order.time / sum };
     });
     setPomodoroAllocation(allocation);
-    console.log(allocation);
   }, [pomodoroOrder]);
 
   return (
-    <div className="w-full">
+    <div className="w-full my-10">
       {getProgress()}
       <div className="w-full bg-gray-100 rounded-full h-3 dark:bg-gray-700 flex">
         {pomodoroAllocation.map((allocation, index) => {
@@ -133,6 +132,16 @@ export const TimeAllocationBar: React.FC<Props> = (props: Props) => {
       <div className="flex justify-between">
         <div className="text-xs text-gray-500 dark:text-gray-400">0</div>
         <div className="text-xs text-gray-500 dark:text-gray-400">{sumTime / 60 / 1000}</div>
+      </div>
+      <div className="my-2">
+        <div className="flex my-1">
+          <div className="h-3 w-3 bg-blue-700"></div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">集中する時間</div>
+        </div>
+        <div className="flex my-1">
+          <div className="h-3 w-3 bg-green-600"></div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">休憩時間</div>
+        </div>
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ import { createPomodoro, updatePomodoro } from '../../apis/pomodoro';
 import { AuthUserContext } from '../../context/authUserContext';
 import { MusicContext } from '../../context/musicContext';
 import { SelectPlaylistModal } from '../PlaylistModal/Index';
+import { TimeAllocationBar } from '../TimeAllocationBar/Index';
 
 interface Props{
   mode: string;
@@ -200,7 +201,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
         </div>
         <div id="worktime-playlist-form">
           <label htmlFor="worktime-playlist" className="block text-sm font-medium leading-6">
-            作業中に再生するプレイリスト
+            集中する間に再生するプレイリスト
           </label>
           <div className="mt-2">
             {isErrorWorktimePlaylist && (
@@ -236,7 +237,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
         </div>
         <div id="worktime-length-form">
           <label htmlFor="worktime-length" className="block text-sm font-medium leading-6">
-            作業時間
+            集中する時間
           </label>
           <div className="mt-2">
             {isErrorWorktimeLength && (
@@ -248,7 +249,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
                 name="worktime-length"
                 id="worktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={worktimeLength / 60 / 1000}
+                value={worktimeLength > 0 ? (worktimeLength / 60 / 1000) : undefined }
                 onChange={(e) => setWorktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
@@ -269,7 +270,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
                 name="breaktime-length"
                 id="breaktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={breaktimeLength / 60 / 1000}
+                value={breaktimeLength > 0 ? (breaktimeLength / 60 / 1000) : undefined}
                 onChange={(e) => setBreaktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
@@ -290,7 +291,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
                 name="term-count"
                 id="term-count"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={termCount}
+                value={termCount > 0 ? termCount : undefined}
                 onChange={(e) => setTermCount(Number(e.target.value))}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">回</span>
@@ -311,7 +312,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
                 name="term-breaktime-length"
                 id="term-breaktime-length"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={longBreaktimeLength / 60 / 1000}
+                value={longBreaktimeLength > 0 ? (longBreaktimeLength / 60 / 1000) : undefined}
                 onChange={(e) => setLongBreaktimeLength(Number(e.target.value) * 60 * 1000)}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">分</span>
@@ -332,14 +333,14 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
                 name="term_repeat_count"
                 id="term_repeat_count"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={termRepeatCount}
+                value={termRepeatCount > 0 ? termRepeatCount : undefined}
                 onChange={(e) => setTermRepeatCount(Number(e.target.value))}
               />
               <span className="inline-flex items-center px-3 text-gray-500 text-sm">回</span>
             </div>
           </div>
         </div>
-        <div id="submit-button">
+        <div id="submit-button" className="my-4">
           {props.mode === 'create' ? (
             <button
               type="button"
@@ -361,7 +362,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
       </div>
       <SelectPlaylistModal
         open={isWorktimePlaylistModalOpen}
-        title={'作業中に再生するプレイリストを選択'}
+        title={'集中する間に再生するプレイリストを選択'}
         declineButtonText={'キャンセル'}
         declineButtonOnClick={() => handleWorktimePlaylistModalClose()}
         closeModalOnClick={() => handleWorktimePlaylistModalClose()}
@@ -374,6 +375,13 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
         declineButtonOnClick={() => handleBreaktimePlaylistModalClose()}
         closeModalOnClick={() => handleBreaktimePlaylistModalClose()}
         selectPlaylistOnClick={(playlistId: string, playlistName: string) => handleSetBreaktimePlaylist(playlistId, playlistName)}
+      />
+      <TimeAllocationBar
+        workTime={worktimeLength}
+        breakTime={breaktimeLength}
+        termCount={termCount}
+        longBreakTime={longBreaktimeLength}
+        termRepeatCount={termRepeatCount}
       />
     </>
   );
