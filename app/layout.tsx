@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Header } from './components/Header/Index';
 import AuthUserProvider from './context/authUserContext';
 import MusicProvider from './context/musicContext';
 import './globals.css';
@@ -16,8 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <AuthUserProvider>
       <MusicProvider>
         <html lang="en">
+          <body/>
+          <Header />
           <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <body className={inter.className}>{children}</body>
+            <div className={inter.className}>{children}</div>
           </div>
         </html>
       </MusicProvider>

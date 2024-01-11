@@ -5,7 +5,6 @@ import { PlayPomodoroConsole } from '@/app/components/PlayPomodoroConsole/Index'
 import { Pomodoro } from '@/app/types';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Header } from '../../components/Header/Index';
 
 export default function PlayPomodoro() {
   const params = useParams<{slug: string}>();
@@ -38,7 +37,6 @@ export default function PlayPomodoro() {
 
   return (
     <div>
-      <Header />
       <PlayPomodoroConsole pomodoro={pomodoro}/>
     </div>
   );
