@@ -176,9 +176,9 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
   }, [props.pomodoro]);
 
   return (
-    <>
+    <div className="flex flex-col">
       <div id="create-pomodoro-form">
-        <div id="pomodoro-name-form">
+        <div id="pomodoro-name-form" className="my-4">
           <label htmlFor="pomodoro_name" className="block text-sm font-medium leading-6">
             ポモドーロ名
           </label>
@@ -199,7 +199,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="worktime-playlist-form">
+        <div id="worktime-playlist-form" className="my-4">
           <label htmlFor="worktime-playlist" className="block text-sm font-medium leading-6">
             集中する間に再生するプレイリスト
           </label>
@@ -217,7 +217,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </button>
           </div>
         </div>
-        <div id="breaktime-playlist-form">
+        <div id="breaktime-playlist-form" className="my-4">
           <label htmlFor="breaktime-playlist" className="block text-sm font-medium leading-6">
             休憩中に再生するプレイリスト
           </label>
@@ -235,7 +235,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </button>
           </div>
         </div>
-        <div id="worktime-length-form">
+        <div id="worktime-length-form" className="my-4">
           <label htmlFor="worktime-length" className="block text-sm font-medium leading-6">
             集中する時間
           </label>
@@ -256,7 +256,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="breaktime-length-form">
+        <div id="breaktime-length-form" className="my-4">
           <label htmlFor="breaktime-length" className="block text-sm font-medium leading-6">
             休憩時間
           </label>
@@ -277,7 +277,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="term-count-form">
+        <div id="term-count-form" className="my-4">
           <label htmlFor="term-count" className="block text-sm font-medium leading-6">
             セット数
           </label>
@@ -298,7 +298,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="term-breaktime-length-form">
+        <div id="term-breaktime-length-form" className="my-4">
           <label htmlFor="term-breaktime-length" className="block text-sm font-medium leading-6">
             全セット終了時の休憩時間
           </label>
@@ -319,7 +319,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="term_repeat_count-form">
+        <div id="term_repeat_count-form" className="my-4">
           <label htmlFor="term_repeat_count" className="block text-sm font-medium leading-6">
             セットを繰り返す回数
           </label>
@@ -360,6 +360,15 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
           )}
         </div>
       </div>
+      <div>
+        <TimeAllocationBar
+          workTime={worktimeLength}
+          breakTime={breaktimeLength}
+          termCount={termCount}
+          longBreakTime={longBreaktimeLength}
+          termRepeatCount={termRepeatCount}
+        />
+      </div> 
       <SelectPlaylistModal
         open={isWorktimePlaylistModalOpen}
         title={'集中する間に再生するプレイリストを選択'}
@@ -376,13 +385,6 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
         closeModalOnClick={() => handleBreaktimePlaylistModalClose()}
         selectPlaylistOnClick={(playlistId: string, playlistName: string) => handleSetBreaktimePlaylist(playlistId, playlistName)}
       />
-      <TimeAllocationBar
-        workTime={worktimeLength}
-        breakTime={breaktimeLength}
-        termCount={termCount}
-        longBreakTime={longBreaktimeLength}
-        termRepeatCount={termRepeatCount}
-      />
-    </>
+    </div>
   );
 };

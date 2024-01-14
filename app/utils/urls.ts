@@ -9,3 +9,4 @@ export const requestHeader = {
 };
 
 export const pomodorosUrl = `${DEFAULT_URL}/pomodoros`;
+export const userUrl = `${DEFAULT_URL}/users`;

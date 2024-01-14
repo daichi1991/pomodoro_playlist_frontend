@@ -16,12 +16,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <AuthUserProvider>
       <MusicProvider>
-        <html lang="en">
-          <body/>
+        <html lang="ja">
+          <body>
           <Header />
-          <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className={inter.className}>{children}</div>
-          </div>
+            <div className="flex min-h-full flex-col items-center justify-center px-6 py-6 lg:px-8">
+              <div className="max-w-screen-2xl">
+                <div className={inter.className}>{children}</div>
+              </div>
+            </div>
+          </body>
         </html>
       </MusicProvider>
     </AuthUserProvider>

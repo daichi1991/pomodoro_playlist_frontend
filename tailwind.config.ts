@@ -1,4 +1,9 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
+
+const {
+  iconsPlugin,
+  getIconCollections,
+} = require("@egoist/tailwindcss-icons");
 
 const config: Config = {
   content: [
@@ -41,6 +46,10 @@ const config: Config = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    iconsPlugin({
+      collections: getIconCollections(["material-symbols"]),
+    }),
+  ],
 }
 export default config

@@ -283,7 +283,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
           {/* <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center w-full h-full"> */}
           <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center w-full h-full">
           <div className="relative p-10 w-full h-full">
-              <div className="relative bg-gray-900/60 backdrop-blur-lg rounded-md border border-gray-900/60 shadow-lg p-10 w-full h-full text-center">
+              <div className="relative bg-gray-900/60 backdrop-blur-lg rounded-3xl border border-gray-900/60 shadow-lg p-10 w-full h-full text-center">
                 {player && (
             playPomodoroState === 'stop' ? (
                     <button onClick={() => handleStartPomodoro()} className="text-4xl text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg w-60 h-20 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">

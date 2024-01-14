@@ -76,7 +76,7 @@ export const PomodoroList = () => {
 
   return (
     <>
-      <h1>Pomodoro List</h1>
+      <div className="text-xl mb-4">Pomodoro List</div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -91,19 +91,19 @@ export const PomodoroList = () => {
                 休憩時のプレイリスト名
               </th>
               <th scope="col" className="px-6 py-3">
-                集中する時間
+                集中
               </th>
               <th scope="col" className="px-6 py-3">
-                休憩する時間
+                休憩
               </th>
               <th scope="col" className="px-6 py-3">
                 セット数
               </th>
               <th scope="col" className="px-6 py-3">
-                セット終了後の休憩時間
+                セット後の休憩
               </th>
               <th scope="col" className="px-6 py-3">
-                セットを繰り返す回数
+                セット繰り返し
               </th>
               <th scope="col" className="px-6 py-3">
                 アクション

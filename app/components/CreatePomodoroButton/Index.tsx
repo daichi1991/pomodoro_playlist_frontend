@@ -2,12 +2,13 @@
 
 export const CreatePomodoroButton: React.FC = () => {
   return (
-    <div>
+    <div className="my-4 flex justify-center">
       <a
         href="create_pomodoro"
-        className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+        className="hover:bg-gray-700 rounded-md px-3 py-2 flex items-center justify-center text-xl"
       >
-        create pomodoro
+        <span className="i-material-symbols-add-circle-outline"></span>
+        <span>新規作成</span>
       </a>
     </div>
   );

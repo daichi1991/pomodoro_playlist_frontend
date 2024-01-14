@@ -1,9 +1,7 @@
-export const startPlaylist = async (playlist_id: string) => {
-  console.log(playlist_id);
+export const startPlaylist = async (playlist_id: string, retry: boolean = false) => {
   if (!playlist_id) return;
   const access_token = localStorage.getItem('access_token');
   if (!access_token) return;
-  console.log('startPlaylist');
   await shuffleMode();
   const context_uri = `spotify:playlist:${playlist_id}`;
   const requestHeader = {
@@ -14,19 +12,10 @@ export const startPlaylist = async (playlist_id: string) => {
     method: 'PUT',
     headers: requestHeader,
     body: JSON.stringify({ context_uri, position_ms: 0 }),
-  });
-}
-
-export const shuffleMode = async () => {
-  const access_token = localStorage.getItem('access_token');
-  if (!access_token) return;
-  const requestHeader = {
-    'Authorization': 'Bearer ' + access_token,
-    'Content-Type': 'application/json',
-  };
-  await fetch('https://api.spotify.com/v1/me/player/shuffle?state=true', {
-    method: 'PUT',
-    headers: requestHeader,
+  }).then((response) => {
+    console.log(response);
+  }).catch((error) => {
+    console.log(error);
   });
 }
 
@@ -70,4 +59,17 @@ export const getPlaylists = async () => {
   const data = await response.json();
   console.log(data);
   return data.items;
+}
+
+export const shuffleMode = async () => {
+  const access_token = localStorage.getItem('access_token');
+  if (!access_token) return;
+  const requestHeader = {
+    'Authorization': 'Bearer ' + access_token,
+    'Content-Type': 'application/json',
+  };
+  await fetch('https://api.spotify.com/v1/me/player/shuffle?state=true', {
+    method: 'PUT',
+    headers: requestHeader,
+  });
 }
