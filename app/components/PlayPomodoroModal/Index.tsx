@@ -1,9 +1,8 @@
 'use client';
 
-import { pausePlayback, resumePlayback, startPlaylist } from "@/app/apis/spotify";
-import { MusicContext } from "@/app/context/musicContext";
+import { pausePlayback, resumePlayback, startPlaylist, transferPlayback } from "@/app/apis/spotify";
 import { Pomodoro } from "@/app/types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TimeAllocationBar } from "../TimeAllocationBar/Index";
 
 interface Props {
@@ -17,7 +16,8 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   const open = props.open;
   const closeModalOnClick = props.closeModalOnClick;
 
-  const { player, setPlayer } = useContext(MusicContext);
+  // const { player, setPlayer } = useContext(MusicContext);
+  const [ player, setPlayer ] = useState<Spotify.Player | null>(null);
 
   const playerRef = useRef<Spotify.Player | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,6 +75,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   }
 
   const handleResumePomodoro = async () => {
+    console.log('handleResumePomodoro');
     setIsRunningCountupTimer(true);
     resumePlayback();
     setPlayPomodoroState('play');
@@ -135,7 +136,6 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) return;
     if (accessToken) {
-      if (player) return;
       // window.onSpotifyWebPlaybackSDKReadyのコールバックを定義する
       // SDKが読み込まれたタイミングでこのコールバックが実行される
       window.onSpotifyWebPlaybackSDKReady = () => {
@@ -149,6 +149,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
         player.addListener('ready', ({ device_id }) => {
           // ここで楽曲を再生する際に必要なdevice_idを取得してstateに格納しておく
           setDeviceId(device_id);
+          transferPlayback(device_id)
         });
         player.connect();
         playerRef.current = player;

@@ -23,6 +23,7 @@ export const EditPomodoroForm: React.FC = () => {
       if (!pomodoro_id) return;
       const response = await getOnePomodoro(pomodoro_id);
       const spoitifyPlaylists = await getPlaylists();
+      if (spoitifyPlaylists.length === 0) return;
       const work_time_playlist = getSpotifyPlaylist(response.pomodoro.work_time_playlist_id, spoitifyPlaylists);
       const break_time_playlist = getSpotifyPlaylist(response.pomodoro.break_time_playlist_id, spoitifyPlaylists);
       response.pomodoro.work_time_playlist_name = work_time_playlist!.name;

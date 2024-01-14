@@ -1,7 +1,7 @@
 'use client';
 
 import { MusicContext } from "@/app/context/musicContext";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 
 interface Props {
   open: boolean;
@@ -14,17 +14,30 @@ interface Props {
 
 export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
   const { playlists } = useContext(MusicContext);
+  const insideRef = useRef<HTMLDivElement>(null);
   
   const handleSelectPlaylistOnClick = (playlistId: string, playlistName: string) => {
     props.selectPlaylistOnClick(playlistId, playlistName);
     props.closeModalOnClick();
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (insideRef.current && !insideRef.current.contains(event.target as Node)) {
+        props.closeModalOnClick();
+      }
+    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, [insideRef]);
+
   return (
     <>
     {props.open && (
     <div id="overlay" className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-      <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center">
+          <div id="default-modal" ref={insideRef} tabIndex={-1} aria-hidden="true" className="justify-center items-center">
         <div className="relative p-4 w-full max-w-2xl max-h-full h-11/12">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">

@@ -1,5 +1,6 @@
 import { Pomodoro } from '../types';
 import { pomodorosUrl, requestHeader, userUrl } from '../utils/urls';
+import { getSpotifyUserId } from './spotify';
 
 export const fetchLogin = async () => {
   const response = await fetch(`${userUrl}/login`, {
@@ -71,7 +72,9 @@ export const postRefreshToken = async () => {
   console.log('postRefreshToken', res.data);
 };
 
-export const getPomodoros = async (spotify_user_id: string) => {
+export const getPomodoros = async () => {
+  const spotify_user_id = await getSpotifyUserId();
+  if (!spotify_user_id) return;
   const requestHeader = {
     'Content-Type': 'application/json',
     'Pomodoro-Authorization': spotify_user_id,

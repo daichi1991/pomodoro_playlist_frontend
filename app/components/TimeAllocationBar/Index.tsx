@@ -114,7 +114,6 @@ export const TimeAllocationBar: React.FC<Props> = (props: Props) => {
       return prev + current.time;
     }, 0);
     setSumTime(sum);
-    console.log(sum);
     const allocation = pomodoroOrder.map((order) => {
       return { mode: order.mode, time: order.time, rate: order.time / sum };
     });

@@ -1,6 +1,7 @@
 'use client';
 
 import { getOnePomodoro } from '@/app/apis/pomodoro';
+import { PageTitle } from '@/app/components/PageTitle/Index';
 import { PlayPomodoroConsole } from '@/app/components/PlayPomodoroConsole/Index';
 import { Pomodoro } from '@/app/types';
 import { useParams } from 'next/navigation';
@@ -37,6 +38,7 @@ export default function PlayPomodoro() {
 
   return (
     <div>
+      <PageTitle title={pomodoro.name} />
       <PlayPomodoroConsole pomodoro={pomodoro}/>
     </div>
   );

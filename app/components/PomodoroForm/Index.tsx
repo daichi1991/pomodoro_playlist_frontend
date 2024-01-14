@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { createPomodoro, updatePomodoro } from '../../apis/pomodoro';
 import { AuthUserContext } from '../../context/authUserContext';
 import { MusicContext } from '../../context/musicContext';
-import { SelectPlaylistModal } from '../PlaylistModal/Index';
+import { SelectPlaylistModal } from '../SelectPlaylistModal/Index';
 import { TimeAllocationBar } from '../TimeAllocationBar/Index';
 
 interface Props{
@@ -162,7 +162,6 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log(props.pomodoro);
     if (props.pomodoro) {
       setPomodoroName(props.pomodoro.name);
       setWorktimePlaylist({ id: props.pomodoro.work_time_playlist_id, name: props.pomodoro.work_time_playlist_name! });
@@ -176,8 +175,8 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
   }, [props.pomodoro]);
 
   return (
-    <div className="flex flex-col">
-      <div id="create-pomodoro-form">
+    <div className="flex items-center justify-center">
+      <div id="create-pomodoro-form" className="min-w-80">
         <div id="pomodoro-name-form" className="my-4">
           <label htmlFor="pomodoro_name" className="block text-sm font-medium leading-6">
             ポモドーロ名
@@ -186,7 +185,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorPomodoroName && (
               <div className="text-red-500 text-sm">ポモドーロ名を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="text"
                 name="pomodoro_name"
@@ -204,17 +203,17 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             集中する間に再生するプレイリスト
           </label>
           <div className="mt-2">
-            {isErrorWorktimePlaylist && (
-              <div className="text-red-500 text-sm">プレイリストを選択してください</div>
-            )}
-            {worktimePlaylist?.name}
             <button
               type="button"
-              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              className="mr-4 rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 bg-gray-800 ring-inset ring-gray-300 hover:bg-gray-500"
               onClick={() => handleWorktimePlaylistModalOpen()}
             >
               選択
             </button>
+            {isErrorWorktimePlaylist && (
+              <div className="text-red-500 text-sm">プレイリストを選択してください</div>
+            )}
+            {worktimePlaylist?.name}
           </div>
         </div>
         <div id="breaktime-playlist-form" className="my-4">
@@ -222,17 +221,17 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             休憩中に再生するプレイリスト
           </label>
           <div className="mt-2">
-            {isErrorBreaktimePlaylist && (
-              <div className="text-red-500 text-sm">プレイリストを選択してください</div>
-            )}
-            {breaktimePlaylist?.name}
             <button
               type="button"
-              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              className="mr-4 rounded-md  px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 bg-gray-800 ring-inset ring-gray-300 hover:bg-gray-500"
               onClick={() => handleBreaktimePlaylistModalOpen()}
             >
               選択
             </button>
+            {isErrorBreaktimePlaylist && (
+              <div className="text-red-500 text-sm">プレイリストを選択してください</div>
+            )}
+            {breaktimePlaylist?.name}
           </div>
         </div>
         <div id="worktime-length-form" className="my-4">
@@ -243,11 +242,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorWorktimeLength && (
               <div className="text-red-500 text-sm">作業時間を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="number"
                 name="worktime-length"
                 id="worktime-length"
+                placeholder="25"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={worktimeLength > 0 ? (worktimeLength / 60 / 1000) : undefined }
                 onChange={(e) => setWorktimeLength(Number(e.target.value) * 60 * 1000)}
@@ -264,11 +264,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorBreaktimeLength && (
               <div className="text-red-500 text-sm">休憩時間を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="number"
                 name="breaktime-length"
                 id="breaktime-length"
+                placeholder="5"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={breaktimeLength > 0 ? (breaktimeLength / 60 / 1000) : undefined}
                 onChange={(e) => setBreaktimeLength(Number(e.target.value) * 60 * 1000)}
@@ -285,11 +286,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorTermCount && (
               <div className="text-red-500 text-sm">セット数を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="number"
                 name="term-count"
                 id="term-count"
+                placeholder="3"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={termCount > 0 ? termCount : undefined}
                 onChange={(e) => setTermCount(Number(e.target.value))}
@@ -306,11 +308,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorLongBreaktimeLength && (
               <div className="text-red-500 text-sm">セット終了時の休憩時間を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="number"
                 name="term-breaktime-length"
                 id="term-breaktime-length"
+                placeholder="30"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={longBreaktimeLength > 0 ? (longBreaktimeLength / 60 / 1000) : undefined}
                 onChange={(e) => setLongBreaktimeLength(Number(e.target.value) * 60 * 1000)}
@@ -327,11 +330,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             {isErrorTermRepeatCount && (
               <div className="text-red-500 text-sm">セットを繰り返す回数を入力してください</div>
             )}
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
               <input
                 type="number"
                 name="term_repeat_count"
                 id="term_repeat_count"
+                placeholder="2"
                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={termRepeatCount > 0 ? termRepeatCount : undefined}
                 onChange={(e) => setTermRepeatCount(Number(e.target.value))}
@@ -340,11 +344,11 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             </div>
           </div>
         </div>
-        <div id="submit-button" className="my-4">
+        <div id="submit-button" className="my-8 w-full">
           {props.mode === 'create' ? (
             <button
               type="button"
-              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              className="w-full rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset bg-gray-800 ring-gray-500 hover:bg-gray-500"
               onClick={() => handleCreate()}
             >
               作成
@@ -352,7 +356,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
           ) : (
             <button
               type="button"
-              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              className="w-full rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset bg-gray-800 ring-gray-500 hover:bg-gray-500"
               onClick={() => handleUpdate()}
             >
               更新
@@ -360,7 +364,8 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
           )}
         </div>
       </div>
-      <div>
+      <div className="w-8"></div>
+      <div className="min-w-80">
         <TimeAllocationBar
           workTime={worktimeLength}
           breakTime={breaktimeLength}
