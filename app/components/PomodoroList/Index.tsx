@@ -111,7 +111,6 @@ export const PomodoroList = () => {
           </thead>
           <tbody>
             {pomodorosState.map((pomodoro) => (
-              <>
                 <tr
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
                   key={pomodoro.id}
@@ -145,7 +144,6 @@ export const PomodoroList = () => {
                     </button>
                   </td>
                 </tr>
-              </>
             ))}
           </tbody>
         </table>
