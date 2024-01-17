@@ -6,6 +6,7 @@ import { deletePomodoro, getPomodoros } from '../../apis/pomodoro';
 import { getPlaylists } from '../../apis/spotify';
 import { AuthUserContext } from '../../context/authUserContext';
 import { Pomodoro, SpotifyPlaylistItems } from '../../types';
+import { CreatePomodoroButton } from '../CreatePomodoroButton/Index';
 import { Modal } from '../Modal/Index';
 
 export const PomodoroList = () => {
@@ -71,83 +72,93 @@ export const PomodoroList = () => {
 
 
   useEffect(() => {
+    console.log('PomodoroList useEffect')
     handleGetPomodoros();
   }, [userId, deletePomodoroCount]);
 
   return (
     <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                ポモドーロ名
-              </th>
-              <th scope="col" className="px-6 py-3">
-                集中時のプレイリスト名
-              </th>
-              <th scope="col" className="px-6 py-3">
-                休憩時のプレイリスト名
-              </th>
-              <th scope="col" className="px-6 py-3">
-                集中
-              </th>
-              <th scope="col" className="px-6 py-3">
-                休憩
-              </th>
-              <th scope="col" className="px-6 py-3">
-                セット数
-              </th>
-              <th scope="col" className="px-6 py-3">
-                セット後の休憩
-              </th>
-              <th scope="col" className="px-6 py-3">
-                セット繰り返し
-              </th>
-              <th scope="col" className="px-6 py-3">
-                アクション
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {pomodorosState.map((pomodoro) => (
-                <tr
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
-                  key={pomodoro.id}
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}
+      {pomodorosState.length === 0 && (
+        < div className="text-xl my-10 text-center leading-10">
+        まだポモドーロが作成されていません。<br />
+        </div >
+      )}
+      {pomodorosState.length !== 0 && (
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  ポモドーロ名
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  集中時のプレイリスト名
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  休憩時のプレイリスト名
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  集中
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  休憩
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  セット数
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  セット後の休憩
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  セット繰り返し
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  アクション
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {pomodorosState.map((pomodoro) => (
+                  <tr
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
+                    key={pomodoro.id}
                   >
-                    {pomodoro.name}
-                  </th>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time_playlist_name}</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time_playlist_name}</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time / 60 / 1000}分</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time / 60 / 1000}分</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_count}セット</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.long_break_time / 60 / 1000}分</td>
-                  <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_repeat_count}回</td>
-                  <td className="flex items-center px-6 py-4">
-                    <button
-                      onClick={() => handelGoToUpdatePomodoroPage(pomodoro.id!)}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}
                     >
-                      編集
-                    </button>
-                    <button
-                      onClick={() => handleDeleteModalOpen(pomodoro)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                    >
-                      削除
-                    </button>
-                  </td>
-                </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                      {pomodoro.name}
+                    </th>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time_playlist_name}</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time_playlist_name}</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.work_time / 60 / 1000}分</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.break_time / 60 / 1000}分</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_count}セット</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.long_break_time / 60 / 1000}分</td>
+                    <td className="px-6 py-4" onClick={() => handleGoToPlayPomodoroPage(pomodoro.id!)}>{pomodoro.term_repeat_count}回</td>
+                    <td className="flex items-center px-6 py-4">
+                      <button
+                        onClick={() => handelGoToUpdatePomodoroPage(pomodoro.id!)}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        編集
+                      </button>
+                      <button
+                        onClick={() => handleDeleteModalOpen(pomodoro)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                      >
+                        削除
+                      </button>
+                    </td>
+                  </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <CreatePomodoroButton />
       <Modal
         open={isModalOpen}
         title="本当に削除しますか？"

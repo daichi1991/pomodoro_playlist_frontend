@@ -1,14 +1,16 @@
 'use client';
 
-import { fetchLogin, getTokens } from '@/app/apis/pomodoro';
+import { fetchLogin } from '@/app/apis/pomodoro';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { AuthUserContext } from './context/authUserContext';
 import { SERVICE_NAME } from "./utils/constants";
 
 export default function Home() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthUserContext);
   const router = useRouter();
   const pathname = usePathname()
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
   const handleSignin = async () => {
     await fetchLogin().then((url) => {
@@ -20,41 +22,12 @@ export default function Home() {
     router.push('/dashboard');
   };
 
-  useEffect(() => {
-    const handleGetTokens = async () => {
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get('code');
-      const state = url.searchParams.get('state');
-      if (!code || !state) {
-        return;
-      }
-      await getTokens();
-      router.push('/');
-      setIsLogin(true);
-    };
-    handleGetTokens();
-  }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem('access_token')) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, [isLogin]);
-
-  useEffect(() => {
-    if (localStorage.getItem('access_token')) {
-      setIsLogin(true);
-    }
-  }, [isLogin]);
-
   return (
     <>
       <div className="text-6xl font-bold flex items-center justify-center my-10">
         {SERVICE_NAME}
       </div>
-      {!isLogin && (
+      {!isAuthenticated && (
         <>
           <div className="text-xl my-10 text-center leading-10">
             {SERVICE_NAME}は、集中して作業するためのタイマーを作成できるサービスです。<br />
@@ -77,7 +50,7 @@ export default function Home() {
           </div>
         </>
       )}
-      {isLogin && (
+      {isAuthenticated && (
         <>
           <div className="text-xl my-10 text-center leading-10">
             Spotifyと連携済みです。

@@ -3,8 +3,10 @@
 import React, { createContext, useEffect, useState } from 'react';
 
 interface AuthUserType {
+  // ログインしているかどうか
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  // 削除しても良い
   handleAuthenticate: () => void;
   userId: string;
   setUserId: React.Dispatch<React.SetStateAction<string>>;

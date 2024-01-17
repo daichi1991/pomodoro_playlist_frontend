@@ -7,7 +7,7 @@ import { AuthUserContext } from '../../context/authUserContext';
 
 export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { userImage, setUserImage, getUserProfile } = useContext(AuthUserContext);
+  const { userImage, setUserImage, getUserProfile, setIsAuthenticated } = useContext(AuthUserContext);
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
   const insideRef = useRef<HTMLDivElement>(null);
@@ -29,6 +29,7 @@ export const Header: React.FC = () => {
     setIsLogin(false);
     setUserImage('');
     router.push('/');
+    setIsAuthenticated(false);
   };
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export const Header: React.FC = () => {
       router.push('/');
       getUserProfile();
       setIsLogin(true);
+      setIsAuthenticated(true);
     };
     handleGetTokens();
   }, []);

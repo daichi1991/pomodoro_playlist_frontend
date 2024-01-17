@@ -17,7 +17,7 @@ export const Modal: React.FC<Props> = (props: Props) => {
     <>
     {props.open && (
     <div id="overlay" className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-      <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center">
+      <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center z-10">
         <div className="relative p-4 w-full max-w-2xl max-h-full">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">

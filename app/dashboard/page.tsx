@@ -1,4 +1,3 @@
-import { CreatePomodoroButton } from '../components/CreatePomodoroButton/Index';
 import { PageTitle } from '../components/PageTitle/Index';
 import { PomodoroList } from '../components/PomodoroList/Index';
 
@@ -7,7 +6,6 @@ export default function Dashboard() {
     <div>
       <PageTitle title="Dashboard" />
       <PomodoroList />
-      <CreatePomodoroButton />
     </div>
   );
 }
