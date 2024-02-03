@@ -7,6 +7,7 @@ import { getPlaylists } from '../../apis/spotify';
 import { AuthUserContext } from '../../context/authUserContext';
 import { Pomodoro, SpotifyPlaylistItems } from '../../types';
 import { CreatePomodoroButton } from '../CreatePomodoroButton/Index';
+import { Loading } from '../Loading/Index';
 import { Modal } from '../Modal/Index';
 
 export const PomodoroList = () => {
@@ -16,21 +17,7 @@ export const PomodoroList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteTargetPomodoro, setDeleteTargetPomodoro] = useState<Pomodoro | null>(null);
   const [deletePomodoroCount, setDeletePomodoroCount] = useState(0);
-
-  const handleGetPomodoros = async () => {
-
-    const response = await getPomodoros();
-    const pomodoros = response.pomodoros;
-    if (pomodoros.length === 0) {
-      setPomodorosState([]);
-      return;
-    }
-    const spotifyPlaylists = await getPlaylists();
-    pomodoros.forEach(async (pomodoro: Pomodoro) => {
-      setPomodoroName(pomodoro, spotifyPlaylists);
-    });
-    setPomodorosState(pomodoros);
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const setPomodoroName = (pomodoro: Pomodoro, spotifyPlaylistItems: SpotifyPlaylistItems[]) => {
     const workTimePlaylist = spotifyPlaylistItems.find((playlist) => playlist.id === pomodoro.work_time_playlist_id);
@@ -72,18 +59,33 @@ export const PomodoroList = () => {
 
 
   useEffect(() => {
-    console.log('PomodoroList useEffect')
+    const handleGetPomodoros = async () => {
+      const response = await getPomodoros();
+      const pomodoros = response.pomodoros;
+      if (pomodoros.length === 0) {
+        setPomodorosState([]);
+        setIsLoading(false);
+        return;
+      }
+      const spotifyPlaylists = await getPlaylists();
+      pomodoros.forEach(async (pomodoro: Pomodoro) => {
+        setPomodoroName(pomodoro, spotifyPlaylists);
+      });
+      setPomodorosState(pomodoros);
+      setIsLoading(false);
+    };
     handleGetPomodoros();
   }, [userId, deletePomodoroCount]);
 
   return (
     <>
-      {pomodorosState.length === 0 && (
+      {isLoading ? <Loading /> : (
+      pomodorosState.length === 0 ? (
         < div className="text-xl my-10 text-center leading-10">
         まだポモドーロが作成されていません。<br />
         </div >
-      )}
-      {pomodorosState.length !== 0 && (
+      )
+      : (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -156,7 +158,10 @@ export const PomodoroList = () => {
             </tbody>
           </table>
         </div>
-      )}
+        )
+      )
+      }
+
 
       <CreatePomodoroButton />
       <Modal

@@ -1,7 +1,8 @@
 'use client';
 
-import { MusicContext } from "@/app/context/musicContext";
-import { useContext, useEffect, useRef } from "react";
+import { getPlaylists } from "@/app/apis/spotify";
+import { SpotifyPlaylistItems } from "@/app/types";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   open: boolean;
@@ -13,8 +14,9 @@ interface Props {
 }
 
 export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
-  const { playlists } = useContext(MusicContext);
+  // const { playlists } = useContext(MusicContext);
   const insideRef = useRef<HTMLDivElement>(null);
+  const [ playlists, setPlaylists ] = useState<SpotifyPlaylistItems[]>([]);
   
   const handleSelectPlaylistOnClick = (playlistId: string, playlistName: string) => {
     props.selectPlaylistOnClick(playlistId, playlistName);
@@ -33,12 +35,20 @@ export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
     };
   }, [insideRef]);
 
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      const response = await getPlaylists();
+      setPlaylists(response);
+    }
+    fetchPlaylists();
+  }, []);
+
   return (
     <>
     {props.open && (
     <div id="overlay" className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div id="default-modal" ref={insideRef} tabIndex={-1} aria-hidden="true" className="justify-center items-center">
-        <div className="relative p-4 w-full max-w-2xl max-h-full h-11/12">
+      <div id="default-modal" ref={insideRef} tabIndex={-1} aria-hidden="true" className="justify-center items-center">
+        <div className="relative p-4 w-full max-w-2xl">
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -56,7 +66,7 @@ export const SelectPlaylistModal: React.FC<Props> = (props: Props) => {
                   <span className="sr-only">Close modal</span>
               </button>
             </div>
-            <div className="p-4 md:p-5 space-y-4 overflow-y-auto">
+            <div className="p-4 md:p-5 space-y-4 overflow-y-auto max-h-96">
               <ul>
                 {playlists?.map((playlist: any) => (
                   <li

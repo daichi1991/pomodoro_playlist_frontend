@@ -39,10 +39,46 @@ const config: Config = {
                 transform: 'translateY(10px)'
             },
         },
+        'focus-bg-color': {
+          '0%': {
+            backgroundColor: '#0099CC',
+          },
+          '25%': {
+            backgroundColor: '#009999',
+          },
+          '50%': {
+            backgroundColor: '#339999',
+          },
+          '75%': {
+            backgroundColor: '#3399CC',
+          },
+          '100%': {
+            backgroundColor: '#0099CC',
+          },
+        },
+        'break-bg-color': {
+          '0%': {
+            backgroundColor: '#FFFFCC',
+          },
+          '25%': {
+            backgroundColor: '#CCFFCC',
+          },
+          '50%': {
+            backgroundColor: '#CCFF99',
+          },
+          '75%': {
+            backgroundColor: '#FFFF99',
+          },
+          '100%': {
+            backgroundColor: '#FFFFCC',
+          },
+        },
       },
       animation: {
         'fade-in-up': 'fade-in-up 0.5s ease-out',
         'fade-out-down': 'fade-out-down 0.5s ease-out',
+        'focus-bg-color': 'focus-bg-color 10s infinite',
+        'break-bg-color': 'break-bg-color 10s infinite',
       }
     },
   },

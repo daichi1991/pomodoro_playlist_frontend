@@ -35,8 +35,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   const [countupTime, setCountupTime] = useState(0)
   const [goNextTrack, setGoNextTrack] = useState(false);
   const [countdownTime, setCountdownTime] = useState(0);
-  const [backgroundColorFrom, setBackgroundColorFrom] = useState<string>('from-blue-800/90');
-  const [backgroundColorTo, setBackgroundColorTo] = useState<string>('to-green-800/90');
+  const [backgroundColor, setBackgroundColor] = useState<string>('from-blue-800/90 to-green-800/90');
 
   const handleCloseModal = () => {
     finishPomodoro();
@@ -54,8 +53,6 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
     setCurrentTermRepeat(0);
     setGoNextTrack(false);
     setCountdownTime(0);
-    setBackgroundColorFrom('from-blue-800/90');
-    setBackgroundColorTo('to-green-800/90');
   }
 
   const handleStartPomodoro = async () => {
@@ -265,13 +262,12 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // 背景色の設定
     if (pomodoroElementsState.length === 0) return;
+
     const calcBackgroundColor = () => {
       if (pomodoroElementsState[currentPomodoroPosition].mode === 'work') {
-        setBackgroundColorFrom('from-blue-800/90');
-        setBackgroundColorTo('to-green-800/90');
+        setBackgroundColor('animate-focus-bg-color')
       } else {
-        setBackgroundColorFrom('from-yellow-200/90');
-        setBackgroundColorTo('to-red-200/90');
+        setBackgroundColor('animate-break-bg-color')
       }
     }
     calcBackgroundColor();
@@ -280,7 +276,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   return (
     <>
       {open && (
-        <div key={open ? 'modal-open' : 'modal-closed'} id="overlay" className={`${open ? 'animate-fade-in-up' : 'animate-fade-out-down'} transform fixed top-0 left-0 w-full h-full bg-gradient-to-br ${backgroundColorFrom} ${backgroundColorTo} items-center justify-center`}>
+        <div key={open ? 'modal-open' : 'modal-closed'} id="overlay" className={`${open ? 'animate-fade-in-up' : 'animate-fade-out-down'} transform fixed top-0 left-0 w-full h-full bg-gradient-to-br ${backgroundColor} items-center justify-center`}>
           {/* <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center w-full h-full"> */}
           <div id="default-modal" tabIndex={-1} aria-hidden="true" className="justify-center items-center w-full h-full">
           <div className="relative p-10 w-full h-full">

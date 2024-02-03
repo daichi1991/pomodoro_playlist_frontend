@@ -69,7 +69,7 @@ export const postRefreshToken = async () => {
   }
   const res = await response.json();
   localStorage.setItem('access_token', res.data.access_token);
-  console.log('postRefreshToken', res.data);
+  console.log('postRefreshToken');
 };
 
 export const getPomodoros = async () => {

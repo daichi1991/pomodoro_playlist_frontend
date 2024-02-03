@@ -1,1 +1,1 @@
-export const SERVICE_NAME = 'Pomodify';
+export const SERVICE_NAME = 'Pomo Sync Sounds';

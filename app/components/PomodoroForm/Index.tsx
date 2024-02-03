@@ -146,6 +146,7 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
       return;
     }
     const pomodoro = {
+      id: props.pomodoro?.id,
       spotify_user_id: userId,
       name: pomodoroName,
       work_time_playlist_id: worktimePlaylist.id,
