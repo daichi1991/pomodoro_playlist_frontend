@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="text-6xl font-bold flex items-center justify-center my-10">
+      <div className="text-6xl font-bold flex items-center justify-center my-10 text-shadow-2xl">
         <Image
           src="/images/logo.png"
           alt="logo"

@@ -92,6 +92,30 @@ const config: Config = {
     iconsPlugin({
       collections: getIconCollections(["material-symbols"]),
     }),
+    function ({ addUtilities }: { addUtilities: any }) {
+      const newUtilities = {
+        ".text-shadow": {
+          textShadow: "0px 2px 3px darkgrey",
+        },
+        ".text-shadow-md": {
+          textShadow: "0px 3px 3px darkgrey",
+        },
+        ".text-shadow-lg": {
+          textShadow: "0px 5px 3px darkgrey",
+        },
+        ".text-shadow-xl": {
+          textShadow: "0px 7px 3px darkgrey",
+        },
+        ".text-shadow-2xl": {
+          textShadow: "0px 0px 50px white",
+        },
+        ".text-shadow-none": {
+          textShadow: "none",
+        },
+      }
+
+      addUtilities(newUtilities)
+    },
   ],
 }
 export default config
