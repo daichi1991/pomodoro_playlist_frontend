@@ -307,12 +307,12 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             htmlFor="breaktime-length"
             className="block text-sm font-medium leading-6 text-gray-700 dark:text-gray-300"
           >
-            休憩時間
+            小休憩の時間
           </label>
           <div className="mt-2">
             {isErrorBreaktimeLength && (
               <div className="text-red-500 text-sm">
-                休憩時間を入力してください
+                小休憩の時間を入力してください
               </div>
             )}
             <div className="flex rounded-md shadow-sm ring-1 ring-inset bg-gray-50 dark:bg-gray-900 ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
@@ -341,6 +341,9 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             className="block text-sm font-medium leading-6 text-gray-700 dark:text-gray-300"
           >
             セット数
+            <span className="text-xs ml-4 text-gray-500">
+              *1セット = 集中する時間 + 小休憩の時間
+            </span>
           </label>
           <div className="mt-2">
             {isErrorTermCount && (
@@ -369,7 +372,10 @@ export const PomodoroForm: React.FC<Props> = (props: Props) => {
             htmlFor="term-breaktime-length"
             className="block text-sm font-medium leading-6 text-gray-700 dark:text-gray-300"
           >
-            全セット終了時の休憩時間
+            長休憩の時間
+            <span className="text-xs ml-4 text-gray-500">
+              * セット終了時の休憩時間
+            </span>
           </label>
           <div className="mt-2">
             {isErrorLongBreaktimeLength && (
