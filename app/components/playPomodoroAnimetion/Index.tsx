@@ -12,7 +12,7 @@ export const PlayPomodoroAnimetion: React.FC<Props> = (props: Props) => {
     >
       {props.mode === "work" ? (
         <div className="flex-row">
-          <div className="text-2xl">集中</div>
+          <div className="text-2xl text-white">集中</div>
           <svg
             height="200px"
             width="200px"
@@ -56,9 +56,11 @@ export const PlayPomodoroAnimetion: React.FC<Props> = (props: Props) => {
         </div>
       ) : (
         <div className="flex-row">
-          {props.mode === "break" && <div className="text-2xl">休憩</div>}
+          {props.mode === "break" && (
+            <div className="text-2xl text-white">休憩</div>
+          )}
           {props.mode === "long_break" && (
-            <div className="text-2xl">長めの休憩</div>
+            <div className="text-2xl text-white">長めの休憩</div>
           )}
           <svg
             height="200px"

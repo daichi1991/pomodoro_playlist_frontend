@@ -92,7 +92,7 @@ export const PlayPomodoroConsole: React.FC<Props> = (props: Props) => {
     <div className="flex-row items-center justify-center">
       <div className="flex items-center justify-center">
         <button
-          className="my-8 px-8 h-20 text-2xl border rounded-xl border-gray-500 border-solid hover:bg-gray-500"
+          className="my-8 px-8 h-20 text-2xl rounded-xl light-button dark:dark-button"
           onClick={() => setIsModalOpen(true)}
         >
           ポモドーロタイマーを始める

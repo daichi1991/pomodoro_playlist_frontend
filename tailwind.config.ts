@@ -94,23 +94,25 @@ const config: Config = {
     }),
     function ({ addUtilities }: { addUtilities: any }) {
       const newUtilities = {
-        ".text-shadow": {
-          textShadow: "0px 2px 3px darkgrey",
+        ".light-button": {
+          backgroundColor: "#e5e7eb",
+          color: "black",
+          "&:hover": {
+            backgroundColor: "#d1d5db",
+          },
         },
-        ".text-shadow-md": {
-          textShadow: "0px 3px 3px darkgrey",
+        ".dark-button": {
+          backgroundColor: "#1f2937",
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#6b7280",
+          },
         },
-        ".text-shadow-lg": {
-          textShadow: "0px 5px 3px darkgrey",
+        ".light-text-shadow": {
+          textShadow: "0px 0px 50px black",
         },
-        ".text-shadow-xl": {
-          textShadow: "0px 7px 3px darkgrey",
-        },
-        ".text-shadow-2xl": {
+        ".dark-text-shadow": {
           textShadow: "0px 0px 50px white",
-        },
-        ".text-shadow-none": {
-          textShadow: "none",
         },
       }
 

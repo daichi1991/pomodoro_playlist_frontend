@@ -1,145 +1,185 @@
-'use client';
+"use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
 interface Props {
-  workTime?: number;
-  breakTime?: number;
-  longBreakTime?: number;
-  termCount?: number;
-  termRepeatCount?: number;
-  progress?: number;
+  workTime?: number
+  breakTime?: number
+  longBreakTime?: number
+  termCount?: number
+  termRepeatCount?: number
+  progress?: number
+  page?: string
 }
 
 export const TimeAllocationBar: React.FC<Props> = (props: Props) => {
-  const { workTime, breakTime, longBreakTime, termCount, termRepeatCount, progress } = props;
-  const [pomodoroOrder, setPomodoroOrder] = useState<{ 'mode': string, time: number }[]>([]);
-  const [pomodoroAllocation, setPomodoroAllocation] = useState<{ 'mode': string, time: number, rate: number }[]>([]);
-  const [sumTime, setSumTime] = useState<number>(0);
+  const {
+    workTime,
+    breakTime,
+    longBreakTime,
+    termCount,
+    termRepeatCount,
+    progress,
+    page,
+  } = props
+  const [pomodoroOrder, setPomodoroOrder] = useState<
+    { mode: string; time: number }[]
+  >([])
+  const [pomodoroAllocation, setPomodoroAllocation] = useState<
+    { mode: string; time: number; rate: number }[]
+  >([])
+  const [sumTime, setSumTime] = useState<number>(0)
 
   const getBarColor = (mode: string) => {
-    if (mode === 'work') {
-      return 'bg-blue-700';
+    if (mode === "work") {
+      return "bg-blue-700"
     }
-    if (mode === 'break') {
-      return 'bg-green-600';
+    if (mode === "break") {
+      return "bg-green-600"
     }
-    if (mode === 'longBreak') {
-      return 'bg-green-600';
+    if (mode === "longBreak") {
+      return "bg-green-600"
     }
   }
 
   const getBarRound = (index: number, length: number) => {
     if (index === 0) {
-      return 'rounded-l-full';
+      return "rounded-l-full"
     }
     if (index === length - 1) {
-      return 'rounded-r-full';
+      return "rounded-r-full"
     }
-    return '';
+    return ""
   }
 
   const getBarWidth = (rate: number) => {
-    return `${rate * 100}%`;
+    return `${rate * 100}%`
   }
 
   const getBarStyle = (index: number, length: number) => {
     const style = {
       width: getBarWidth(pomodoroAllocation[index].rate),
-    };
-    return style;
+    }
+    return style
   }
 
   const getBar = (index: number, length: number) => {
-    const style = getBarStyle(index, length);
-    const color = getBarColor(pomodoroAllocation[index].mode);
-    const round = getBarRound(index, length);
-    return (
-      <div className={`h-3 ${color} ${round}`} style={style}></div>
-    )
+    const style = getBarStyle(index, length)
+    const color = getBarColor(pomodoroAllocation[index].mode)
+    const round = getBarRound(index, length)
+    return <div className={`h-3 ${color} ${round}`} style={style}></div>
   }
 
   const getProgress = () => {
-    if (!progress) return;
-    const currentProgressRate = progress / sumTime * 100;
+    if (!progress) return
+    const currentProgressRate = (progress / sumTime) * 100
     return (
-      <svg width="10" height="10" style={{ left: `calc(${currentProgressRate}% - 5px)` }} className="relative">
-        <path d="M0 0 L10 0 L5 10 Z" style={{fill: "gray"}}></path>
+      <svg
+        width="10"
+        height="10"
+        style={{ left: `calc(${currentProgressRate}% - 5px)` }}
+        className="relative"
+      >
+        <path d="M0 0 L10 0 L5 10 Z" style={{ fill: "#e5e7eb" }}></path>
       </svg>
     )
   }
 
   useEffect(() => {
-    const firstBase = [];
+    const firstBase = []
     if (workTime) {
-      firstBase.push({ mode: 'work', time: workTime });
+      firstBase.push({ mode: "work", time: workTime })
     }
     if (breakTime) {
-      firstBase.push({ mode: 'break', time: breakTime });
+      firstBase.push({ mode: "break", time: breakTime })
     }
     if (longBreakTime) {
-      firstBase.push({ mode: 'longBreak', time: longBreakTime });
+      firstBase.push({ mode: "longBreak", time: longBreakTime })
     }
-    setPomodoroOrder(firstBase);
-    const secoundBase:{mode:string, time:number}[] = [];
+    setPomodoroOrder(firstBase)
+    const secoundBase: { mode: string; time: number }[] = []
     if (termCount) {
       for (let i = 0; i < termCount; i++) {
         firstBase.forEach((base) => {
-          if (base.mode === 'work') {
-            secoundBase.push(base);
+          if (base.mode === "work") {
+            secoundBase.push(base)
           }
-          if (i < termCount - 1 && base.mode === 'break') {
-            secoundBase.push(base);
+          if (i < termCount - 1 && base.mode === "break") {
+            secoundBase.push(base)
           }
-          if (i === termCount - 1 && base.mode === 'longBreak') {
-            secoundBase.push(base);
+          if (i === termCount - 1 && base.mode === "longBreak") {
+            secoundBase.push(base)
           }
-        });
+        })
       }
-      setPomodoroOrder(secoundBase);
+      setPomodoroOrder(secoundBase)
     }
     if (termRepeatCount) {
-      const thirdBase:{mode:string, time:number}[] = [];
+      const thirdBase: { mode: string; time: number }[] = []
       for (let i = 0; i < termRepeatCount; i++) {
         secoundBase.forEach((base) => {
-          thirdBase.push(base);
-        });
+          thirdBase.push(base)
+        })
       }
-      setPomodoroOrder(thirdBase);
+      setPomodoroOrder(thirdBase)
     }
-  }, [breakTime, longBreakTime, termCount, termRepeatCount, workTime]);
+  }, [breakTime, longBreakTime, termCount, termRepeatCount, workTime])
 
   useEffect(() => {
     const sum = pomodoroOrder.reduce((prev, current) => {
-      return prev + current.time;
-    }, 0);
-    setSumTime(sum);
+      return prev + current.time
+    }, 0)
+    setSumTime(sum)
     const allocation = pomodoroOrder.map((order) => {
-      return { mode: order.mode, time: order.time, rate: order.time / sum };
-    });
-    setPomodoroAllocation(allocation);
-  }, [pomodoroOrder]);
+      return { mode: order.mode, time: order.time, rate: order.time / sum }
+    })
+    setPomodoroAllocation(allocation)
+  }, [pomodoroOrder])
 
   return (
     <div className="w-full my-10">
       {getProgress()}
-      <div className="w-full bg-gray-100 rounded-full h-3 dark:bg-gray-700 flex">
+      <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700 flex">
         {pomodoroAllocation.map((allocation, index) => {
-          return getBar(index, pomodoroAllocation.length);
+          return getBar(index, pomodoroAllocation.length)
         })}
       </div>
       <div className="flex justify-between">
-        <div className="text-xs text-gray-500 dark:text-gray-400">0</div>
-        <div className="text-xs text-gray-500 dark:text-gray-400">{sumTime / 60 / 1000}</div>
+        <div
+          className={`text-xs ${
+            page === "play" ? "text-gray-200" : "text-gray-500"
+          } dark:text-gray-400`}
+        >
+          0
+        </div>
+        <div
+          className={`text-xs ${
+            page === "play" ? "text-gray-200" : "text-gray-500"
+          } dark:text-gray-400`}
+        >
+          {sumTime / 60 / 1000}
+        </div>
       </div>
       <div className="my-2">
-        <div className="flex my-1">
+        <div className="flex my-1 items-center">
           <div className="h-3 w-3 bg-blue-700"></div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">集中する時間</div>
+          <div
+            className={`ml-1 text-xs ${
+              page === "play" ? "text-gray-200" : "text-gray-500"
+            } dark:text-gray-400`}
+          >
+            集中する時間
+          </div>
         </div>
-        <div className="flex my-1">
+        <div className="flex my-1 items-center">
           <div className="h-3 w-3 bg-green-600"></div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">休憩時間</div>
+          <div
+            className={`ml-1 text-xs ${
+              page === "play" ? "text-gray-200" : "text-gray-500"
+            } dark:text-gray-400`}
+          >
+            休憩時間
+          </div>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="text-6xl font-bold flex items-center justify-center my-10 text-shadow-2xl">
+      <div className="text-6xl font-bold flex items-center justify-center my-10 text-white light-text-shadow dark:dark-text-shadow">
         <Image
           src="/images/logo.png"
           alt="logo"
@@ -55,7 +55,7 @@ export default function Home() {
           <div className="flex items-center justify-center">
             <button
               onClick={handleSignin}
-              className="mr-4 rounded-md  px-8 py-4 text-xl font-semibold shadow-sm ring-1 bg-gray-800 ring-inset ring-gray-300 hover:bg-gray-500"
+              className="mr-4 rounded-md  px-8 py-4 text-xl font-semibold shadow-sm light-button dark:dark-button"
               role="menuitem"
               id="user-menu-item-0"
             >
@@ -72,7 +72,7 @@ export default function Home() {
           <div className="flex items-center justify-center">
             <button
               onClick={handleGotoDashboard}
-              className="mr-4 rounded-md  px-8 py-4 text-xl font-semibold shadow-sm ring-1 bg-gray-800 ring-inset ring-gray-300 hover:bg-gray-500"
+              className="mr-4 rounded-md  px-8 py-4 text-xl font-semibold shadow-sm light-button dark:dark-button"
               role="menuitem"
               id="user-menu-item-0"
             >

@@ -20,7 +20,6 @@ export const Header: React.FC = () => {
 
   const handleSignin = () => {
     fetchLogin().then((url) => {
-      console.log("handleSignin")
       router.push(url)
     })
   }
@@ -170,7 +169,7 @@ export const Header: React.FC = () => {
                   <button
                     onClick={handleMenuOpen}
                     type="button"
-                    className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="relative flex rounded-full text-gray-200 bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                     id="user-menu-button"
                     aria-expanded="false"
                     aria-haspopup="true"

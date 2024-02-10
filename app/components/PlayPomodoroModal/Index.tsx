@@ -8,8 +8,8 @@ import {
 } from "@/app/apis/spotify"
 import { Pomodoro } from "@/app/types"
 import { useEffect, useRef, useState } from "react"
+import { PlayPomodoroAnimetion } from "../PlayPomodoroAnimetion/Index"
 import { TimeAllocationBar } from "../TimeAllocationBar/Index"
-import { PlayPomodoroAnimetion } from "../playPomodoroAnimetion/Index"
 
 interface Props {
   pomodoro: Pomodoro
@@ -90,7 +90,6 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
   }
 
   const handleResumePomodoro = async () => {
-    console.log("handleResumePomodoro")
     setIsRunningCountupTimer(true)
     resumePlayback()
     setPlayPomodoroState("play")
@@ -370,7 +369,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
                   mode={pomodoroElementsState[currentPomodoroPosition].mode}
                 />
                 {currentTermRestTime > 0 && (
-                  <div className="my-4 text-6xl">
+                  <div className="my-4 text-6xl text-white">
                     {formatTime(currentTermRestTime)}
                   </div>
                 )}
@@ -381,6 +380,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
                   termCount={pomodoro.term_count}
                   termRepeatCount={pomodoro.term_repeat_count}
                   progress={countupTime}
+                  page={"play"}
                 />
                 <button
                   type="button"
