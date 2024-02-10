@@ -374,19 +374,6 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
                     {formatTime(currentTermRestTime)}
                   </div>
                 )}
-                <div className="w-full flex items-center justify-center my-4 text-xl">
-                  {currentTerm > 0 && (
-                    <div className="">
-                      {currentTerm} / {pomodoro.term_count} 周目
-                    </div>
-                  )}
-                  <div className="mx-4">:</div>
-                  {currentTermRepeat > 0 && (
-                    <div className="">
-                      {currentTermRepeat} / {pomodoro.term_repeat_count} セット
-                    </div>
-                  )}
-                </div>
                 <TimeAllocationBar
                   workTime={pomodoro.work_time}
                   breakTime={pomodoro.break_time}

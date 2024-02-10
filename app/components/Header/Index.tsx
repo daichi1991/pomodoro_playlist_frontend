@@ -1,71 +1,76 @@
-'use client';
+"use client"
 
-import { fetchLogin, getTokens } from '@/app/apis/pomodoro';
-import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { AuthUserContext } from '../../context/authUserContext';
+import { fetchLogin, getTokens } from "@/app/apis/pomodoro"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useContext, useEffect, useRef, useState } from "react"
+import { AuthUserContext } from "../../context/authUserContext"
 
 export const Header: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { userImage, setUserImage, getUserProfile, setIsAuthenticated } = useContext(AuthUserContext);
-  const router = useRouter();
-  const [isLogin, setIsLogin] = useState(false);
-  const insideRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false)
+  const { userImage, setUserImage, getUserProfile, setIsAuthenticated } =
+    useContext(AuthUserContext)
+  const router = useRouter()
+  const [isLogin, setIsLogin] = useState(false)
+  const insideRef = useRef<HTMLDivElement>(null)
 
   const handleMenuOpen = () => {
-    setMenuOpen(!menuOpen);
-  };
+    setMenuOpen(!menuOpen)
+  }
 
   const handleSignin = () => {
     fetchLogin().then((url) => {
-      console.log('handleSignin');
-      router.push(url);
-    });
-  };
+      console.log("handleSignin")
+      router.push(url)
+    })
+  }
 
   const handleSignout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setIsLogin(false);
-    setUserImage('');
-    router.push('/');
-    setIsAuthenticated(false);
-  };
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
+    setIsLogin(false)
+    setUserImage("")
+    router.push("/")
+    setIsAuthenticated(false)
+  }
 
   useEffect(() => {
     const handleGetTokens = async () => {
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get('code');
-      const state = url.searchParams.get('state');
+      const url = new URL(window.location.href)
+      const code = url.searchParams.get("code")
+      const state = url.searchParams.get("state")
       if (!code || !state) {
-        return;
+        return
       }
-      await getTokens();
-      router.push('/');
-      getUserProfile();
-      setIsLogin(true);
-      setIsAuthenticated(true);
-    };
-    handleGetTokens();
-  }, []);
+      await getTokens()
+      router.push("/")
+      getUserProfile()
+      setIsLogin(true)
+      setIsAuthenticated(true)
+    }
+    handleGetTokens()
+  }, [])
 
   useEffect(() => {
-    if (localStorage.getItem('access_token')) {
-      setIsLogin(true);
+    if (localStorage.getItem("access_token")) {
+      setIsLogin(true)
     }
-  }, [isLogin]);
+  }, [isLogin])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (insideRef.current && !insideRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
+      if (
+        insideRef.current &&
+        !insideRef.current.contains(event.target as Node)
+      ) {
+        setMenuOpen(false)
       }
-    };
-    document.addEventListener('click', handleClickOutside, true);
+    }
+    document.addEventListener("click", handleClickOutside, true)
     return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [insideRef]);
+      document.removeEventListener("click", handleClickOutside, true)
+    }
+  }, [insideRef])
 
   return (
     <>
@@ -114,13 +119,17 @@ export const Header: React.FC = () => {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <svg className="h-8 w-auto"
+                {/* <svg className="h-8 w-auto"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -133,7 +142,14 @@ export const Header: React.FC = () => {
                   height="100%"
                   width="100%"
                   />
-                </svg>
+                </svg> */}
+                <Image
+                  src="/images/logo.png"
+                  alt="logo"
+                  width={40}
+                  height={40}
+                  className="h-8 w-auto"
+                />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
@@ -154,7 +170,6 @@ export const Header: React.FC = () => {
                   <button
                     onClick={handleMenuOpen}
                     type="button"
-
                     className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                     id="user-menu-button"
                     aria-expanded="false"
@@ -170,7 +185,13 @@ export const Header: React.FC = () => {
                         stroke="currentColor"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <image xlinkHref={userImage} x="0" y="0" height="100%" width="100%" />
+                        <image
+                          xlinkHref={userImage}
+                          x="0"
+                          y="0"
+                          height="100%"
+                          width="100%"
+                        />
                       </svg>
                     ) : (
                       <span className="i-material-symbols-account-circle w-8 h-8"></span>
@@ -226,5 +247,5 @@ export const Header: React.FC = () => {
         {/* <!-- Mobile menu, show/hide based on menu state. --> */}
       </nav>
     </>
-  );
-};
+  )
+}
