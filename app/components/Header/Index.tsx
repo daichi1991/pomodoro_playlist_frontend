@@ -8,8 +8,14 @@ import { AuthUserContext } from "../../context/authUserContext"
 
 export const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { userImage, setUserImage, getUserProfile, setIsAuthenticated } =
-    useContext(AuthUserContext)
+  const {
+    userImage,
+    setUserImage,
+    userName,
+    setUserName,
+    getUserProfile,
+    setIsAuthenticated,
+  } = useContext(AuthUserContext)
   const router = useRouter()
   const [isLogin, setIsLogin] = useState(false)
   const insideRef = useRef<HTMLDivElement>(null)
@@ -29,6 +35,7 @@ export const Header: React.FC = () => {
     localStorage.removeItem("refresh_token")
     setIsLogin(false)
     setUserImage("")
+    setUserName("")
     router.push("/")
     setIsAuthenticated(false)
   }
@@ -227,14 +234,16 @@ export const Header: React.FC = () => {
                         ログイン
                       </div>
                     ) : (
-                      <div
-                        onClick={handleSignout}
-                        className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
-                        role="menuitem"
-                        id="user-menu-item-2"
-                      >
-                        ログアウト
-                      </div>
+                      <>
+                        <div
+                          onClick={handleSignout}
+                          className="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                          role="menuitem"
+                          id="user-menu-item-2"
+                        >
+                          ログアウト
+                        </div>
+                      </>
                     )}
                   </div>
                 )}

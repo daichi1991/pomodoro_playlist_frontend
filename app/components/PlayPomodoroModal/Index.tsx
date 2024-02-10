@@ -330,13 +330,22 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
           >
             <div className="relative p-10 w-full h-full">
               <div className="relative bg-gray-900/60 backdrop-blur-lg rounded-3xl border border-gray-900/60 shadow-lg p-10 w-full h-full text-center">
+                <div className="w-full flex justify-end">
+                  <button
+                    type="button"
+                    className="text-2xl ring-1 ring-gray-400 dark:ring-gray-600 text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg p-2 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={() => handleCloseModal()}
+                  >
+                    <span className="i-material-symbols-close-rounded"></span>
+                  </button>
+                </div>
                 {player &&
                   (playPomodoroState === "stop" ? (
                     <button
                       onClick={() => handleStartPomodoro()}
-                      className="text-4xl text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg w-60 h-20 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="text-4xl ring-1 ring-gray-400 dark:ring-gray-600 text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg w-140 h-20 px-4 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                     >
-                      始める
+                      クリックして始める
                     </button>
                   ) : playPomodoroState === "pause" ? (
                     <button
@@ -364,6 +373,7 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
                       </svg>
                     </button>
                   ))}
+
                 <PlayPomodoroAnimetion
                   isPlaying={isRunningCountupTimer}
                   mode={pomodoroElementsState[currentPomodoroPosition].mode}
@@ -382,13 +392,6 @@ export const PlayPomodoroModal: React.FC<Props> = (props: Props) => {
                   progress={countupTime}
                   page={"play"}
                 />
-                <button
-                  type="button"
-                  className="text-2xl text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg w-40 h-20 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                  onClick={() => handleCloseModal()}
-                >
-                  終了する
-                </button>
               </div>
             </div>
           </div>

@@ -1,91 +1,100 @@
-'use client';
+"use client"
 
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from "react"
 
 interface AuthUserType {
   // ログインしているかどうか
-  isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  isAuthenticated: boolean
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
   // 削除しても良い
-  handleAuthenticate: () => void;
-  userId: string;
-  setUserId: React.Dispatch<React.SetStateAction<string>>;
-  userImage: string;
-  setUserImage: React.Dispatch<React.SetStateAction<string>>;
-  getUserProfile: () => Promise<void>;
-  deviceId: string;
-  setDeviceId: React.Dispatch<React.SetStateAction<string>>;
-  getDeviceId: () => void;
+  handleAuthenticate: () => void
+  userId: string
+  setUserId: React.Dispatch<React.SetStateAction<string>>
+  userImage: string
+  setUserImage: React.Dispatch<React.SetStateAction<string>>
+  userName: string
+  setUserName: React.Dispatch<React.SetStateAction<string>>
+  getUserProfile: () => Promise<void>
+  deviceId: string
+  setDeviceId: React.Dispatch<React.SetStateAction<string>>
+  getDeviceId: () => void
 }
 
 export const AuthUserContext = createContext<AuthUserType>({
   isAuthenticated: false,
   setIsAuthenticated: () => {},
   handleAuthenticate: () => {},
-  userId: '',
+  userId: "",
   setUserId: () => {},
-  userImage: '',
+  userImage: "",
   setUserImage: () => {},
+  userName: "",
+  setUserName: () => {},
   getUserProfile: () => Promise.resolve(),
-  deviceId: '',
+  deviceId: "",
   setDeviceId: () => {},
   getDeviceId: () => {},
-});
+})
 
 interface AuthUserProviderProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export const AuthUserProvider = ({ children }: AuthUserProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userId, setUserId] = useState('');
-  const [userImage, setUserImage] = useState('');
-  const [deviceId, setDeviceId] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userId, setUserId] = useState("")
+  const [userImage, setUserImage] = useState("")
+  const [userName, setUserName] = useState("") // 追加
+  const [deviceId, setDeviceId] = useState("")
 
   const handleAuthenticate = () => {
-    const access_token = localStorage.getItem('access_token');
+    const access_token = localStorage.getItem("access_token")
     if (access_token) {
       getUserProfile().then(() => {
-        if (userImage !== '') {
-          setIsAuthenticated(true);
-          return;
+        if (userImage !== "") {
+          setIsAuthenticated(true)
+          return
         }
-      });
+      })
     }
-    setIsAuthenticated(false);
-    setUserImage('');
-  };
+    setIsAuthenticated(false)
+    setUserImage("")
+  }
 
   const getUserProfile = async () => {
-    if (!localStorage.getItem('access_token')) {
-      return;
+    if (!localStorage.getItem("access_token")) {
+      return
     }
-    const response = await fetch('https://api.spotify.com/v1/me', {
+    const response = await fetch("https://api.spotify.com/v1/me", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
-    });
-    const data = await response.json();
-    setUserId(data.id);
-    setUserImage(data.images[0].url);
-  };
+    })
+    const data = await response.json()
+    setUserId(data.id)
+    setUserImage(data.images[0].url)
+    setUserName(data.display_name) // 追加
+  }
 
   const getDeviceId = async () => {
-    const access_token = localStorage.getItem('access_token');
+    const access_token = localStorage.getItem("access_token")
     if (access_token) {
-      const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-      const data = await response.json();
-      setDeviceId(data.devices[0].id);
+      const response = await fetch(
+        "https://api.spotify.com/v1/me/player/devices",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      )
+      const data = await response.json()
+      setDeviceId(data.devices[0].id)
     }
-  };
+  }
 
   useEffect(() => {
-    handleAuthenticate();
-  }, []);
+    handleAuthenticate()
+  }, [])
 
   return (
     <AuthUserContext.Provider
@@ -97,6 +106,8 @@ export const AuthUserProvider = ({ children }: AuthUserProviderProps) => {
         setUserId,
         userImage,
         setUserImage,
+        userName,
+        setUserName,
         getUserProfile,
         deviceId,
         setDeviceId,
@@ -105,7 +116,7 @@ export const AuthUserProvider = ({ children }: AuthUserProviderProps) => {
     >
       {children}
     </AuthUserContext.Provider>
-  );
-};
+  )
+}
 
-export default AuthUserProvider;
+export default AuthUserProvider
