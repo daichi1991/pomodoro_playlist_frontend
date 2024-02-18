@@ -118,13 +118,13 @@ export const PomodoroList = () => {
                     集中
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    休憩
+                    小休憩
                   </th>
                   <th scope="col" className="px-6 py-3">
                     セット数
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    セット後の休憩
+                    長休憩
                   </th>
                   <th scope="col" className="px-6 py-3">
                     セット繰り返し
